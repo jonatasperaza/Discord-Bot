@@ -1,10 +1,12 @@
-import discord #type: ignore
-from discord import app_commands #type: ignore
+from aiohttp import web
+import asyncio
+import discord
+from discord import app_commands
 import os
-from dotenv import load_dotenv #type: ignore
+from dotenv import load_dotenv
 
 load_dotenv()
- 
+
 id_do_servidor = os.getenv('ID_SERVIDOR')
 
 class MyClient(discord.Client):
@@ -34,4 +36,18 @@ async def slash_ban(interaction: discord.Interaction, member: discord.Member, mo
     else:
         await interaction.response.send_message("Você não tem permissão para banir membros.", ephemeral=True)
 
-aclient.run(os.getenv('TOKEN_BOT')) 
+def run_bot():
+    aclient.run(os.getenv('TOKEN_BOT'))
+
+app = web.Application()
+routes = web.RouteTableDef()
+
+@routes.get('/')
+async def index(request):
+    return web.Response(text="Bot is running!")
+
+app.add_routes(routes)
+
+loop = asyncio.get_event_loop()
+loop.run_in_executor(None, run_bot)
+web.run_app(app)
