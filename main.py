@@ -18,9 +18,16 @@ class MyClient(discord.Client):
     async def on_ready(self):
         await self.wait_until_ready()
         if not self.synced:
-            await self.tree.sync(guild=discord.Object(id=id_do_servidor))
-            self.synced = True
+            try:
+                await self.tree.sync(guild=discord.Object(id=id_do_servidor))
+                self.synced = True
+            except discord.HTTPException as e:
+                print(f"Erro ao sincronizar os comandos: {e}")
+                await asyncio.sleep(15)  # Atraso para evitar rate limiting
         print(f"Entramos como {self.user}.")
+
+    async def on_error(self, event, *args, **kwargs):
+        print(f"Erro detectado: {event}, {args}, {kwargs}")
 
 aclient = MyClient()
 
@@ -37,7 +44,10 @@ async def slash_ban(interaction: discord.Interaction, member: discord.Member, mo
         await interaction.response.send_message("Você não tem permissão para banir membros.", ephemeral=True)
 
 def run_bot():
-    aclient.run(os.getenv('TOKEN_BOT'))
+    try:
+        aclient.run(os.getenv('TOKEN_BOT'))
+    except Exception as e:
+        print(f"Erro ao iniciar o bot: {e}")
 
 app = web.Application()
 routes = web.RouteTableDef()
@@ -50,4 +60,4 @@ app.add_routes(routes)
 
 loop = asyncio.get_event_loop()
 loop.run_in_executor(None, run_bot)
-web.run_app(app)
+web.run_app(app, host='0.0.0.0', port=8080)
