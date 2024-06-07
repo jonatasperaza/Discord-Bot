@@ -1,10 +1,10 @@
-import discord
-from discord import app_commands
+import discord #type: ignore
+from discord import app_commands #type: ignore
 import os
-from dotenv import load_dotenv
+from dotenv import load_dotenv #type: ignore
 
 load_dotenv()
-
+ 
 id_do_servidor = os.getenv('ID-SERVIDOR')
 
 class MyClient(discord.Client):
