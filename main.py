@@ -1,5 +1,3 @@
-from aiohttp import web
-import asyncio
 import discord
 from discord import app_commands
 import os
@@ -23,7 +21,6 @@ class MyClient(discord.Client):
                 self.synced = True
             except discord.HTTPException as e:
                 print(f"Erro ao sincronizar os comandos: {e}")
-                await asyncio.sleep(15)  # Atraso para evitar rate limiting
         print(f"Entramos como {self.user}.")
 
     async def on_error(self, event, *args, **kwargs):
@@ -43,21 +40,5 @@ async def slash_ban(interaction: discord.Interaction, member: discord.Member, mo
     else:
         await interaction.response.send_message("Você não tem permissão para banir membros.", ephemeral=True)
 
-def run_bot():
-    try:
-        aclient.run(os.getenv('TOKEN_BOT'))
-    except Exception as e:
-        print(f"Erro ao iniciar o bot: {e}")
-
-app = web.Application()
-routes = web.RouteTableDef()
-
-@routes.get('/')
-async def index(request):
-    return web.Response(text="Bot is running!")
-
-app.add_routes(routes)
-
-loop = asyncio.get_event_loop()
-loop.run_in_executor(None, run_bot)
-web.run_app(app, host='0.0.0.0', port=8080)
+if __name__ == "__main__":
+    aclient.run(os.getenv('TOKEN_BOT'))
