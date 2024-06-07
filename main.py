@@ -34,4 +34,4 @@ async def slash_ban(interaction: discord.Interaction, member: discord.Member, mo
     else:
         await interaction.response.send_message("Você não tem permissão para banir membros.", ephemeral=True)
 
-aclient.run(os.getenv('TOKEN_BOT'))
+aclient.run(os.getenv('TOKEN_BOT')) 
