@@ -5,7 +5,7 @@ from dotenv import load_dotenv #type: ignore
 
 load_dotenv()
  
-id_do_servidor = os.getenv('ID-SERVIDOR')
+id_do_servidor = os.getenv('ID_SERVIDOR')
 
 class MyClient(discord.Client):
     def __init__(self):
@@ -34,4 +34,4 @@ async def slash_ban(interaction: discord.Interaction, member: discord.Member, mo
     else:
         await interaction.response.send_message("Você não tem permissão para banir membros.", ephemeral=True)
 
-aclient.run(os.getenv('TOKEN-BOT'))
+aclient.run(os.getenv('TOKEN_BOT'))
